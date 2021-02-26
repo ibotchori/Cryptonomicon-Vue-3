@@ -10,6 +10,7 @@
             >
             <div class="mt-1 relative rounded-md shadow-md">
               <input
+                v-model="ticker"
                 type="text"
                 name="wallet"
                 id="wallet"
@@ -112,7 +113,13 @@
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+
+  data() {
+    return {
+      ticker: "default"
+    };
+  }
 };
 </script>
 <style src="./app.css"></style>
