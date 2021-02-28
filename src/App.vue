@@ -49,7 +49,7 @@
           <div
             v-for="t in tickers"
             :key="t.name"
-            @click="sel = t"
+            @click="select(t)"
             :class="{
               'border-4': sel === t
             }"
@@ -169,6 +169,12 @@ export default {
         }
       }, 3000); // <-- update every 3 second
       this.ticker = ""; // <-- remove input value after adding
+    },
+    
+    
+    select(ticker) {
+      this.sel = ticker;
+      this.graph = [] // <-- emtpy graph when new ticker is selected
     },
 
     // delete ticker
