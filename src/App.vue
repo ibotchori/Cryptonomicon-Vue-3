@@ -159,7 +159,7 @@ export default {
         );
         const data = await f.json(); // <-- parse data to json
 
-        // set ticker price from data
+        // set ticker price from data. ("currentTicker.price=" did not working)
         this.tickers.find(t => t.name === currentTicker.name).price =
           data.USD > 1 ? data.USD.toFixed(2) : data.USD.toPrecision(2); // <-- fixed price value
 
