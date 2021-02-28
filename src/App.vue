@@ -92,10 +92,12 @@
           {{ sel.name }} - USD
         </h3>
         <div class="flex items-end border-gray-600 border-b border-l h-64">
-          <div class="bg-purple-800 border w-10 h-24"></div>
-          <div class="bg-purple-800 border w-10 h-32"></div>
-          <div class="bg-purple-800 border w-10 h-48"></div>
-          <div class="bg-purple-800 border w-10 h-16"></div>
+          <div
+            v-for="(bar, indexNumber) in normalizeGraph()"
+            :key="indexNumber"
+            :style="{ height: `${bar}%` }"
+            class="bg-purple-800 border w-10"
+          ></div>
         </div>
         <button
           @click="sel = null"
@@ -136,28 +138,35 @@ export default {
   data() {
     return {
       ticker: "", // <-- value from input
-      tickers: [],
-      sel: null
+      tickers: [], // <--
+      sel: null, // <-- selected ticker
+      graph: [] // <-- value for graph
     };
   },
 
   methods: {
     // add ticker
     add() {
-      const newTicker = {
+      const currentTicker = {
         name: this.ticker, // <-- value from input
         price: "-" // <-- value from API
       };
-      this.tickers.push(newTicker);
+      this.tickers.push(currentTicker);
       setInterval(async () => {
         // get data from API
         const f = await fetch(
-          `https://min-api.cryptocompare.com/data/price?fsym=${newTicker.name}&tsyms=USD&api_key=68d65c54ef7a3dbeaa5afe627ebaa166bda4189d24e9dc35362a8d153360da9e`
+          `https://min-api.cryptocompare.com/data/price?fsym=${currentTicker.name}&tsyms=USD&api_key=68d65c54ef7a3dbeaa5afe627ebaa166bda4189d24e9dc35362a8d153360da9e`
         );
         const data = await f.json(); // <-- parse data to json
+
         // set ticker price from data
-        this.tickers.find(t => t.name === newTicker.name).price = 
-        data.USD > 1 ? data.USD.toFixed(2) : data.USD.toPrecision(2) // <-- fixed price value
+        this.tickers.find(t => t.name === currentTicker.name).price =
+          data.USD > 1 ? data.USD.toFixed(2) : data.USD.toPrecision(2); // <-- fixed price value
+
+        // push selected ticker to graph array
+        if (this.sel?.name === currentTicker.name) {// <-- only if sel has value and not null, ? means that
+          this.graph.push(data.USD);
+        }
       }, 3000); // <-- update every 3 second
       this.ticker = ""; // <-- remove input value after adding
     },
@@ -165,6 +174,15 @@ export default {
     // delete ticker
     handleDelete(tickerToRemove) {
       this.tickers = this.tickers.filter(t => t != tickerToRemove);
+    },
+    // normalize graph for better view
+    normalizeGraph() {
+      const maxValue = Math.max(...this.graph);
+      const minValue = Math.min(...this.graph);
+      return this.graph.map(
+        // 5% is minimal value
+        price => 5 + ((price - minValue) * 95) / (maxValue - minValue)
+      );
     }
   }
 };
