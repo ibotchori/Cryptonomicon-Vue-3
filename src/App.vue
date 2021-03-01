@@ -164,17 +164,17 @@ export default {
           data.USD > 1 ? data.USD.toFixed(2) : data.USD.toPrecision(2); // <-- fixed price value
 
         // push selected ticker to graph array
-        if (this.sel?.name === currentTicker.name) {// <-- only if sel has value and not null, ? means that
+        if (this.sel?.name === currentTicker.name) {
+          // <-- only if sel has value and not null, ? means that
           this.graph.push(data.USD);
         }
       }, 3000); // <-- update every 3 second
       this.ticker = ""; // <-- remove input value after adding
     },
-    
-    
+
     select(ticker) {
       this.sel = ticker;
-      this.graph = [] // <-- emtpy graph when new ticker is selected
+      this.graph = []; // <-- emtpy graph when new ticker is selected
     },
 
     // delete ticker
