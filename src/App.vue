@@ -19,6 +19,22 @@
                 placeholder="DOGE"
               />
             </div>
+            <div class="flex bg-white shadow-md p-1 rounded-md shadow-md flex-wrap">
+            <span class="inline-flex items-center px-2 m-1 rounded-md text-xs font-medium bg-gray-300 text-gray-800 cursor-pointer">
+              BTC
+            </span>
+            <span class="inline-flex items-center px-2 m-1 rounded-md text-xs font-medium bg-gray-300 text-gray-800 cursor-pointer">
+              DOGE
+            </span>
+            <span class="inline-flex items-center px-2 m-1 rounded-md text-xs font-medium bg-gray-300 text-gray-800 cursor-pointer">
+              BCH
+            </span>
+            <span class="inline-flex items-center px-2 m-1 rounded-md text-xs font-medium bg-gray-300 text-gray-800 cursor-pointer">
+              CHD
+            </span>
+          </div>
+          <div class="text-sm text-red-600">Такой тикер уже добавлен</div>
+
           </div>
         </div>
         <button
@@ -140,9 +156,26 @@ export default {
       ticker: "", // <-- value from input
       tickers: [], // <--
       sel: null, // <-- selected ticker
-      graph: [] // <-- value for graph
+      graph: [], // <-- value for graph
+      tickersName: [],
+      searchTikcers: []
     };
   },
+
+  created: async function() {
+const f = await fetch(
+`https://min-api.cryptocompare.com/data/all/coinlist?summary=true`
+);
+const data = await f.json();
+const arr = data.Data;
+for (let el in arr) {
+this.tickersName.push(el);
+console.log(el);
+}
+
+},
+
+  
 
   methods: {
     // add ticker
@@ -171,6 +204,16 @@ export default {
       }, 3000); // <-- update every 3 second
       this.ticker = ""; // <-- remove input value after adding
     },
+
+    searchTicker() {
+for (let el of this.tickersName) {
+if (el === this.ticker) {
+this.searchTikcer.push(el);
+}
+}
+console.log(this.tickersName);
+},
+
 
     select(ticker) {
       this.sel = ticker;
